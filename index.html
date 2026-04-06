@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Classroom Dashboard</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f8fafc;
+      }
+      header {
+        background: #0f172a;
+        color: white;
+        padding: 12px;
+        font-size: 18px;
+        text-align: center;
+      }
+      .container {
+        display: flex;
+        height: 100vh;
+      }
+      .sidebar {
+        width: 220px;
+        background: #1e293b;
+        color: white;
+        padding: 15px;
+      }
+      .sidebar div {
+        margin: 15px 0;
+        cursor: pointer;
+      }
+      .content {
+        flex: 1;
+        padding: 20px;
+      }
+      .card {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      iframe {
+        width: 100%;
+        height: 500px;
+        border: none;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>📘 Classroom Dashboard</header>
+
+    <div class="container">
+      <div class="sidebar">
+        <div onclick="show('home')">🏠 Home</div>
+        <div onclick="show('assignments')">📝 Assignments</div>
+        <div onclick="show('resources')">📂 Resources</div>
+      </div>
+
+      <div class="content">
+        <div id="home" class="page">
+          <div class="card">
+            <h3>Welcome</h3>
+            <p>
+              This dashboard is used to organize coursework and interactive
+              learning tools.
+            </p>
+          </div>
+        </div>
+
+        <div id="assignments" class="page" style="display: none">
+          <div class="card">
+            <h3>Math Practice Tool</h3>
+            <button onclick="loadGame('https://geometrydashlite.io')">
+              Open Tool
+            </button>
+          </div>
+
+          <div class="card">
+            <h3>Reaction Training</h3>
+            <button onclick="loadGame('https://slopegame.io')">
+              Open Tool
+            </button>
+          </div>
+        </div>
+
+        <div id="resources" class="page" style="display: none">
+          <div class="card">
+            <h3>Interactive Simulation</h3>
+            <button onclick="loadGame('https://1v1.lol')">Open Resource</button>
+          </div>
+
+          <div class="card">
+            <h3>Movement Study</h3>
+            <button onclick="loadGame('https://subwaysurfersgame.io')">
+              Open Resource
+            </button>
+          </div>
+        </div>
+
+        <div id="gameContainer"></div>
+      </div>
+    </div>
+
+    <script>
+      function show(page) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => (p.style.display = "none"));
+        document.getElementById(page).style.display = "block";
+      }
+
+      function loadGame(url) {
+        document.getElementById("gameContainer").innerHTML =
+          `<iframe src="${url}"></iframe>`;
+      }
+    </script>
+  </body>
+</html>
