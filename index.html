@@ -1,121 +1,113 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Classroom Dashboard</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f8fafc;
-      }
-      header {
-        background: #0f172a;
-        color: white;
-        padding: 12px;
-        font-size: 18px;
-        text-align: center;
-      }
-      .container {
-        display: flex;
-        height: 100vh;
-      }
-      .sidebar {
-        width: 220px;
-        background: #1e293b;
-        color: white;
-        padding: 15px;
-      }
-      .sidebar div {
-        margin: 15px 0;
-        cursor: pointer;
-      }
-      .content {
-        flex: 1;
-        padding: 20px;
-      }
-      .card {
-        background: white;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      iframe {
-        width: 100%;
-        height: 500px;
-        border: none;
-        margin-top: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <header>📘 Classroom Dashboard</header>
+<head>
+<meta charset="UTF-8">
+<title>Student Dashboard</title>
+<style>
+body { margin:0; font-family:Arial; background:#f1f5f9; }
+header { background:#1e293b; color:white; padding:12px; text-align:center; }
+.container { display:flex; height:100vh; }
+.sidebar { width:200px; background:#0f172a; color:white; padding:15px; }
+.sidebar div { margin:15px 0; cursor:pointer; }
+.content { flex:1; padding:20px; }
+.page { display:none; }
+.active { display:block; }
+canvas { background:black; display:block; margin:10px auto; }
+button { padding:8px 12px; margin-top:10px; }
+</style>
+</head>
+<body>
 
-    <div class="container">
-      <div class="sidebar">
-        <div onclick="show('home')">🏠 Home</div>
-        <div onclick="show('assignments')">📝 Assignments</div>
-        <div onclick="show('resources')">📂 Resources</div>
-      </div>
+<header>📘 Classroom Dashboard</header>
 
-      <div class="content">
-        <div id="home" class="page">
-          <div class="card">
-            <h3>Welcome</h3>
-            <p>
-              This dashboard is used to organize coursework and interactive
-              learning tools.
-            </p>
-          </div>
-        </div>
+<div class="container">
+  <div class="sidebar">
+    <div onclick="show('home')">🏠 Home</div>
+    <div onclick="show('games')">📝 Assignments</div>
+  </div>
 
-        <div id="assignments" class="page" style="display: none">
-          <div class="card">
-            <h3>Math Practice Tool</h3>
-            <button onclick="loadGame('https://geometrydashlite.io')">
-              Open Tool
-            </button>
-          </div>
+  <div class="content">
 
-          <div class="card">
-            <h3>Reaction Training</h3>
-            <button onclick="loadGame('https://slopegame.io')">
-              Open Tool
-            </button>
-          </div>
-        </div>
-
-        <div id="resources" class="page" style="display: none">
-          <div class="card">
-            <h3>Interactive Simulation</h3>
-            <button onclick="loadGame('https://1v1.lol')">Open Resource</button>
-          </div>
-
-          <div class="card">
-            <h3>Movement Study</h3>
-            <button onclick="loadGame('https://subwaysurfersgame.io')">
-              Open Resource
-            </button>
-          </div>
-        </div>
-
-        <div id="gameContainer"></div>
-      </div>
+    <div id="home" class="page active">
+      <h2>Welcome</h2>
+      <p>Student learning tools and interactive simulations.</p>
     </div>
 
-    <script>
-      function show(page) {
-        document
-          .querySelectorAll(".page")
-          .forEach((p) => (p.style.display = "none"));
-        document.getElementById(page).style.display = "block";
-      }
+    <div id="games" class="page">
 
-      function loadGame(url) {
-        document.getElementById("gameContainer").innerHTML =
-          `<iframe src="${url}"></iframe>`;
-      }
-    </script>
-  </body>
+      <h3>Snake (Classic)</h3>
+      <canvas id="snake" width="300" height="300"></canvas>
+
+      <h3>Flappy Bird Clone</h3>
+      <canvas id="flappy" width="300" height="400"></canvas>
+
+      <h3>Geometry Dash Style</h3>
+      <canvas id="dash" width="400" height="150"></canvas>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// SNAKE
+const s = document.getElementById('snake');
+const sctx = s.getContext('2d');
+let snake=[{x:150,y:150}],dx=10,dy=0,food={x:50,y:50};
+document.addEventListener('keydown',e=>{
+ if(e.key==='ArrowUp'){dx=0;dy=-10}
+ if(e.key==='ArrowDown'){dx=0;dy=10}
+ if(e.key==='ArrowLeft'){dx=-10;dy=0}
+ if(e.key==='ArrowRight'){dx=10;dy=0}
+});
+function snakeGame(){
+ sctx.clearRect(0,0,300,300);
+ snake.unshift({x:snake[0].x+dx,y:snake[0].y+dy});
+ if(snake[0].x===food.x&&snake[0].y===food.y){
+  food={x:Math.floor(Math.random()*30)*10,y:Math.floor(Math.random()*30)*10};
+ } else snake.pop();
+ sctx.fillStyle='lime'; snake.forEach(p=>sctx.fillRect(p.x,p.y,10,10));
+ sctx.fillStyle='red'; sctx.fillRect(food.x,food.y,10,10);
+}
+setInterval(snakeGame,100);
+
+// FLAPPY
+const f=document.getElementById('flappy');
+const fctx=f.getContext('2d');
+let birdY=200,vel=0,gravity=0.5,pipeX=300,gap=120;
+document.addEventListener('click',()=>vel=-8);
+function flappy(){
+ fctx.clearRect(0,0,300,400);
+ vel+=gravity; birdY+=vel;
+ pipeX-=2;
+ if(pipeX<-50) pipeX=300;
+ fctx.fillRect(pipeX,0,50,150);
+ fctx.fillRect(pipeX,150+gap,50,400);
+ fctx.beginPath(); fctx.arc(50,birdY,10,0,Math.PI*2); fctx.fill();
+}
+setInterval(flappy,30);
+
+// GEOMETRY DASH STYLE
+const d=document.getElementById('dash');
+const dctx=d.getContext('2d');
+let y=100,vy=0,gravity2=0.6,ground=120,obsX=400;
+document.addEventListener('keydown',e=>{ if(e.code==='Space' && y>=ground) vy=-10; });
+function dash(){
+ dctx.clearRect(0,0,400,150);
+ vy+=gravity2; y+=vy;
+ if(y>ground){y=ground;vy=0}
+ obsX-=5;
+ if(obsX<-20) obsX=400;
+ dctx.fillRect(obsX,110,20,20);
+ dctx.fillRect(50,y,20,20);
+}
+setInterval(dash,30);
+</script>
+
+</body>
 </html>
